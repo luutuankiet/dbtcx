@@ -1,0 +1,59 @@
+[build-system]
+requires = ["hatchling>=1.18"]
+build-backend = "hatchling.build"
+
+[project]
+name = "dbtcx"
+version = "0.1.0"
+description = "Agent-friendly companion utilities for dbt-cloud-cli — solves the multi-step-job artifact trap"
+readme = "README.md"
+license = "MIT"
+authors = [{name = "Ken Luu", email = "luutuankiet.ftu2@gmail.com"}]
+keywords = ["dbt", "dbt-cloud", "dbt-cloud-cli", "data-engineering", "claude-code", "ai-agents"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: Utilities",
+]
+requires-python = ">=3.10"
+dependencies = [
+  "click>=8.0",
+  "python-dotenv>=1.0",
+  "dbt-cloud-cli>=0.2",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.0",
+  "pytest-cov>=4.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/luutuankiet/dbtcx"
+Source = "https://github.com/luutuankiet/dbtcx"
+Issues = "https://github.com/luutuankiet/dbtcx/issues"
+
+[project.scripts]
+dbtcx = "dbtcx.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/dbtcx"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "src/dbtcx",
+  "README.md",
+  "LICENSE",
+  "pyproject.toml",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra -q"
