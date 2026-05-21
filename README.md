@@ -10,10 +10,21 @@
 
 ## Quickstart
 
+**Zero-install (recommended for one-off use, CI, agents):**
+
 ```bash
-pip install dbtcx
+uvx dbtcx fetch-run 12345678
+```
+
+`uvx` ships with [`uv`](https://docs.astral.sh/uv/) and runs `dbtcx` from PyPI in an ephemeral cache — first invocation provisions the wheel in milliseconds, every call after that is instant. Nothing lands in your project venv or global site-packages.
+
+**Persistent install (when you want `dbtcx` on PATH):**
+
+```bash
+uv tool install dbtcx       # adds dbtcx to your shell PATH (managed by uv)
 # or
-uv pip install dbtcx
+uv pip install dbtcx        # into the active venv
+pip install dbtcx           # classic, also fine
 ```
 
 Configure (token from dbt Cloud → Settings → API Tokens):
@@ -26,16 +37,19 @@ DBT_CLOUD_HOST=cloud.getdbt.com    # bare hostname, no scheme
 EOF
 ```
 
+The `.env` is loaded from the current working directory automatically — `uvx dbtcx` and an installed `dbtcx` honor it identically (cwd-relative lookup, no install required for the env loader to work). Use `--env-file PATH` to point elsewhere.
+
 Pull diagnostic artifacts for a run (auto-detect materialization step):
 
 ```bash
-dbtcx fetch-run 12345678
+uvx dbtcx fetch-run 12345678
+# (or `dbtcx fetch-run 12345678` if installed — interchangeable in every example below)
 ```
 
 Bundle a model's compiled SQL too:
 
 ```bash
-dbtcx fetch-run 12345678 --model-path 'compiled/<project>/models/marts/my_model.sql'
+uvx dbtcx fetch-run 12345678 --model-path 'compiled/<project>/models/marts/my_model.sql'
 ```
 
 Output → `./artifacts/run_<run_id>/`:
@@ -87,6 +101,8 @@ When a coding agent (Claude Code, Cursor, Aider, etc.) is asked to "diagnose why
 4. Rank hot stages.
 
 Step 2 is where `dbt-cloud-cli` quietly fails on multi-step prod jobs — the agent gets `adapter_response: {}` and burns N round-trips figuring out which step it actually needed. `dbtcx fetch-run` collapses all that to one call, with progress logs that tell the agent exactly which step won.
+
+**Bonus: zero-install via `uvx`.** Coding agents typically can't `pip install` into their host shell without polluting it. `uvx dbtcx fetch-run …` sidesteps the install step entirely — `uv` provisions an ephemeral cache, the command runs, nothing leaks into the host venv. CI runners get the same benefit (no `setup-python` + install dance).
 
 ## Configuration reference
 
