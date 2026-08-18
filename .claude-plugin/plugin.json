@@ -1,0 +1,9 @@
+{
+  "name": "dbtcx",
+  "description": "Inspect dbt models and their BigQuery runtime metadata to diagnose and optimize slow models, pairing dbtcx run artifacts with the bq CLI.",
+  "author": {
+    "name": "luutuankiet",
+    "url": "https://github.com/luutuankiet"
+  },
+  "skills": ["./skill/dbt-bq-optimize"]
+}
